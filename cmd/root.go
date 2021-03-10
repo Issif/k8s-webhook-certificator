@@ -24,6 +24,11 @@ import (
 	"crypto/x509/pkix"
 	"encoding/pem"
 	"fmt"
+	"log"
+	"os"
+	"strings"
+	"time"
+
 	"github.com/spf13/cobra"
 	certv1beta1 "k8s.io/api/certificates/v1beta1"
 	corev1 "k8s.io/api/core/v1"
@@ -31,10 +36,6 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
-	"log"
-	"os"
-	"strings"
-	"time"
 )
 
 //var cfgFile string
@@ -46,6 +47,7 @@ var (
 	csrNameTemplate0                       = "${service}"
 	csrNameTemplate1                       = "${service}.${namespace}"
 	csrNameTemplate2                       = "${service}.${namespace}.svc"
+	csrNameTemplate3                       = "${service}.${namespace}.svc.cluster.local"
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -97,12 +99,13 @@ Usage:
 		csrNameWithService := r.Replace(csrNameTemplate0)
 		csrNameWithServiceAndNamespace := r.Replace(csrNameTemplate1)
 		csrNameFull := r.Replace(csrNameTemplate2)
+		csrNameFullFQDN := r.Replace(csrNameTemplate3)
 
 		template := x509.CertificateRequest{
 			Subject: pkix.Name{
 				CommonName: csrNameWithServiceAndNamespace,
 			},
-			DNSNames: []string{csrNameWithService, csrNameWithServiceAndNamespace, csrNameFull},
+			DNSNames: []string{csrNameWithService, csrNameWithServiceAndNamespace, csrNameFull, csrNameFullFQDN},
 		}
 
 		csrBytes, err := x509.CreateCertificateRequest(rand.Reader, &template, clientPrivateKey)
