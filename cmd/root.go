@@ -134,7 +134,7 @@ Usage:
 		}
 
 		log.Println("Certificate signing request, status: Retrieving")
-		csExistInCluster, err := certificateSigningRequestsClient.Get(context.TODO(), csrNameWithServiceAndNamespace, metav1.GetOptions{})
+		csExistInCluster, err := certificateSigningRequestsClient.Get(context.TODO(), csrNameFullFQDN, metav1.GetOptions{})
 		if err != nil {
 			log.Printf("Get CertificateSigningRequest - error occurred, detail: %v, but ignored", err)
 		}
@@ -160,7 +160,7 @@ Usage:
 			if expired || forceRenewal {
 				log.Println("Certificate signing request, status: Renewal process started")
 				log.Println("Certificate signing request, status: Deleting")
-				err = certificateSigningRequestsClient.Delete(context.TODO(), csrNameWithServiceAndNamespace, metav1.DeleteOptions{})
+				err = certificateSigningRequestsClient.Delete(context.TODO(), csrNameFullFQDN, metav1.DeleteOptions{})
 				if err != nil {
 					log.Fatalf("Delete CertificateSigningRequest - error occurred, detail: %v, but ignored", err)
 				}
@@ -200,7 +200,7 @@ Usage:
 		var attempt = 0
 		for {
 			if attempt < 3 {
-				res, err := certificateSigningRequestsClient.Get(context.TODO(), csrNameWithServiceAndNamespace, metav1.GetOptions{})
+				res, err := certificateSigningRequestsClient.Get(context.TODO(), csrNameFullFQDN, metav1.GetOptions{})
 				if err != nil {
 					log.Fatalf("Get CertificateSigningRequest - error occurred, detail: %v", err)
 				}
