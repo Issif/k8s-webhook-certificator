@@ -103,7 +103,7 @@ Usage:
 
 		template := x509.CertificateRequest{
 			Subject: pkix.Name{
-				CommonName: csrNameWithServiceAndNamespace,
+				CommonName: csrNameFullFQDN,
 			},
 			DNSNames: []string{csrNameWithService, csrNameWithServiceAndNamespace, csrNameFull, csrNameFullFQDN},
 		}
@@ -124,7 +124,7 @@ Usage:
 
 		certificateSigningRequest := &certv1beta1.CertificateSigningRequest{
 			ObjectMeta: metav1.ObjectMeta{
-				Name: csrNameWithServiceAndNamespace,
+				Name: csrNameFullFQDN,
 			},
 			Spec: certv1beta1.CertificateSigningRequestSpec{
 				Request: clientCSRPEM.Bytes(),
